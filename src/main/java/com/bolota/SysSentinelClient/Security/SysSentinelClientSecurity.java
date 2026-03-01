@@ -16,9 +16,10 @@ public class SysSentinelClientSecurity {
     public static void generateAuthFile() {
         Scanner scanner = new Scanner(System.in);
         File file = new File(authFilePath);
+        System.out.println("Enter the Register Key:");
+        String regKey = scanner.nextLine();
         try (FileWriter fw= new FileWriter(file)){
-            System.out.println("Enter the Register Key:");
-            fw.write("RegisterKey="+scanner.nextLine());
+            fw.write("RegisterKey="+regKey);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -29,7 +30,11 @@ public class SysSentinelClientSecurity {
         }
     }
     public static boolean isJwtFilePresent(){
-        return new File(jwtFilePath).exists();
+        File file = new File(jwtFilePath);
+        if (file.exists()){
+            return !getJwtToken().equals("null");
+        }
+        return false;
     }
     public static String getJwtToken() {
         File file = new File(jwtFilePath);

@@ -44,27 +44,24 @@ public class SysSentinelClientService {
             String fileString = scanner.nextLine();
             String urlAndPort = fileString.substring(fileString.indexOf("=") + 1);
             String rawUUID = scanner.nextLine();
-            UUID = rawUUID.substring(fileString.indexOf("=") + 1);
+            UUID = rawUUID.substring(rawUUID.indexOf("=") + 1);
             System.out.println("[" + new Date() + "] " + "An used URL already exists in the cache, do you want to re-use it? [" + urlAndPort + "] Y/n (Default: Y)");
             String anwser;
-            try (Scanner scanner1 = new Scanner(System.in)) {
-                anwser = scanner1.nextLine();
-                if (!anwser.isBlank()) {
-                    if (anwser.charAt(0) == 'n' || anwser.charAt(0) == 'N') {
-                        System.out.println("[" + new Date() + "]" + " Enter URL and Port (E.g: 198.168.0.12:8080): ");
-                        urlAndPort = scanner1.nextLine();
-                        try (FileWriter fw = new FileWriter(cache)) {
-                            fw.write("url=" + urlAndPort);
-                            fw.write("\nuuid=" + UUID);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
+            Scanner scanner1 = new Scanner(System.in);
+            anwser = scanner1.nextLine();
+            if (!anwser.isBlank()) {
+                if (anwser.charAt(0) == 'n' || anwser.charAt(0) == 'N') {
+                    System.out.println("[" + new Date() + "]" + " Enter URL and Port (E.g: 198.168.0.12:8080): ");
+                    urlAndPort = scanner1.nextLine();
+                    try (FileWriter fw = new FileWriter(cache)) {
+                        fw.write("url=" + urlAndPort);
+                        fw.write("\nuuid=" + UUID);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
                     }
                 }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
             }
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -80,7 +77,6 @@ public class SysSentinelClientService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        scanner.close();
     }
     public static void writeUUID(String uuid){
         File cache = new File("sysSentinel.config");

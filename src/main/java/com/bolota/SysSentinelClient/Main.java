@@ -15,17 +15,16 @@ public class Main {
             String urlAndPort = "192.168.0.12:8080";
             String fileString = "";
             if (!cache.createNewFile()) {
+                assertAuthToken();
                 fileExists(cache);
-                assertAuthToken();
             } else {
-                fileNotExists(cache);
                 assertAuthToken();
+                fileNotExists(cache);
             }
             System.out.println(getUUID());
             runClient(urlAndPort);
         }
         else {
-
             System.out.println(getAuthToken());
         }
     }

@@ -19,19 +19,28 @@ public class SysSentinelClientController {
 
     public static final MediaType JSON = MediaType.parse("application/json");
 
+    private static void requestNewJWTToken(String urlAndPort, OkHttpClient client) throws IOException {
+        Request request = new Request.Builder().url(urlAndPort + sysEndPoint +"updateAuth").header("JwtToken","null").header("RegisterToken",getAuthToken()).header("sysUUID",getUUID()).get().build();
+        System.out.println(request.httpUrl().url());
+        System.out.println(request.headers().toMultimap());
+        Response responseBody = client.newCall(request).execute();
+        String rsp = responseBody.body().string();
+        System.out.println(rsp);
+        generateJwtFile(getTokenfromString(rsp));
+    }
     private static void sendDtoNoAuth(String urlAndPort, SystemDTO sysDTO, OkHttpClient client) throws IOException {
         boolean condUUIDNull = true;
-        if (!isUUIDNull()) {
-            UUID = getUUID();
-            sysDTO.setUUID(UUID);
-            condUUIDNull = false;
-        }
 
-        RequestBody body = RequestBody.create(JSON,genJSON(sysDTO));
-        String rsp = "Null";
         boolean notSentCond = true;
         while (notSentCond) {
             try {
+                if (!isUUIDNull() ) {
+                    UUID = getUUID();
+                    sysDTO.setUUID(UUID);
+                    condUUIDNull = false;
+                }
+                RequestBody body = RequestBody.create(JSON,genJSON(sysDTO));
+                String rsp = "Null";
                 sleep(10000);
                 Request request = new Request.Builder().url(urlAndPort + sysEndPoint +"sysinfo").header("JwtToken","null").header("RegisterToken",getAuthToken()).post(body).build();
                 Response responseBody = client.newCall(request).execute();
@@ -75,6 +84,9 @@ public class SysSentinelClientController {
                     System.out.println("[" + new Date().toString() + "]" + " 'Greetings' request sent, successfully!\n\nInitializing volatile data transmission...");
                     notSentCond = false;
                 }
+                else if (responseBody.code() == 401){
+                    requestNewJWTToken(urlAndPort,client);
+                }
                 else {
                     System.out.println("[" + new Date() + "]" + " Failed to send the request to: " + urlAndPort + sysEndPoint +"sysinfo, " + "code: " + responseBody.code() + " | retrying in 10 seconds...");
                 }
@@ -86,7 +98,7 @@ public class SysSentinelClientController {
         }
     }
     public static void sendSystemDTO(String urlAndPort, SystemDTO sysDTO, OkHttpClient client) throws IOException {
-        if (isJwtFilePresent()){
+        if (isJwtFilePresent() && !isUUIDNull()){
             sendDtoAuth(urlAndPort, sysDTO, client);
         }
         else {
@@ -94,7 +106,7 @@ public class SysSentinelClientController {
         }
         //return rsp;
     }
-    public static void sendSystemVolatileInfo(String urlAndPort, SystemVolatileEntity svie, OkHttpClient client){
+    public static void sendSystemVolatileInfo(String urlAndPort, SystemVolatileEntity svie, OkHttpClient client,SystemDTO sysDTO){
         svie.setUUID(getUUID());
         RequestBody body = RequestBody.create(JSON,genJSON(svie));
         String rsp = "Null";
@@ -104,6 +116,12 @@ public class SysSentinelClientController {
             rsp = responseBody.body().string();
             if (responseBody.code() == 200) {
                 System.out.println("[" + new Date() +"]" + " 'Volatile System Info' sent, successfully! In 10 seconds, sending another one...");
+            }
+            else if (responseBody.code() == 401){
+                requestNewJWTToken(urlAndPort,client);
+            }
+            else if (responseBody.code() == 404){
+                sendSystemDTO(urlAndPort, sysDTO, client);
             }
             else {
                 System.out.println("[" + new Date() +"]" + " Failed to send the request to: " + urlAndPort + sysEndPoint +"sysinfovolatile, " + "code: " + responseBody.code() + " | retrying in 10 seconds...");
@@ -124,7 +142,7 @@ public class SysSentinelClientController {
             try {
                 sleep(3000);
                 svie.updateVolatileInfo(se);
-                sendSystemVolatileInfo(trueUrl,svie,client);
+                sendSystemVolatileInfo(trueUrl,svie,client,sdto);
                 sleep(7000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);

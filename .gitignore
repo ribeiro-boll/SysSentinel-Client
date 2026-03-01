@@ -5,6 +5,7 @@ target/
 .kotlin
 src/main/java/com/bolota/SysSentinelClient/Security/jwtToken.config
 src/main/java/com/bolota/SysSentinelClient/Security/RegisterToken.config
+sysSentinel.config
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
