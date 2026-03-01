@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class SysSentinelClientSecurity {
-    private static final String authFilePath = "SysSentinelClient/src/main/java/com/bolota/SysSentinelClient/Security/RegisterToken.config";
-    private static final String jwtFilePath = "SysSentinelClient/src/main/java/com/bolota/SysSentinelClient/Security/jwtToken.config";
+    private static final String authFilePath = "src/main/java/com/bolota/SysSentinelClient/Security/RegisterToken.config";
+    private static final String jwtFilePath = "src/main/java/com/bolota/SysSentinelClient/Security/jwtToken.config";
 
     public static boolean isAuthFilePresent(){
         File file = new File(authFilePath);

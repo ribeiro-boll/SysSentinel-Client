@@ -1,8 +1,8 @@
 package com.bolota.SysSentinelClient.Controller;
 
-import com.bolota.SysSentinelClient.Entities.DTOs.SystemDTO;
 import com.bolota.SysSentinelClient.Entities.SystemEntity;
 import com.bolota.SysSentinelClient.Entities.SystemVolatileEntity;
+import com.bolota.SysSentinelClient.Entities.DTOs.SystemDTO;
 import com.squareup.okhttp.*;
 
 import java.io.IOException;
@@ -122,9 +122,10 @@ public class SysSentinelClientController {
         sendSystemDTO(trueUrl, sdto, client);
         while (true){
             try {
-                sleep(10000);
+                sleep(3000);
                 svie.updateVolatileInfo(se);
                 sendSystemVolatileInfo(trueUrl,svie,client);
+                sleep(7000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

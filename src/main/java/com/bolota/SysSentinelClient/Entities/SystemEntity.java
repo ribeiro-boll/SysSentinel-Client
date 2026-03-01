@@ -61,8 +61,6 @@ public class SystemEntity {
     @Getter(AccessLevel.NONE)
     boolean hasRun = false;
 
-
-
     public SystemEntity() {
         this.si = new SystemInfo();
         this.name = si.getOperatingSystem().getNetworkParams().getHostName();
