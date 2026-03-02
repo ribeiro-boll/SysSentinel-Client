@@ -90,7 +90,7 @@ RegisterKey=<...>
 Caso o arquivo não exista, o agente pode solicitá-lo durante a execução.
 
 > [!WARNING]
-> A `RegisterKey` definida no Cliente deve ser idêntica à que for definida no Servidor, caso contrário, o cliente não conseguirá fazer uma requisição para receber um JWT próprio. .
+> A `RegisterKey` definida no Cliente deve ser idêntica à que for definida no Servidor, caso contrário, o cliente não conseguirá fazer uma requisição para receber um JWT próprio.
 
 ---
 
