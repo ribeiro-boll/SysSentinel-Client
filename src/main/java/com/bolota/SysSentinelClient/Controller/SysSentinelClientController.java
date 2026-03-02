@@ -23,8 +23,8 @@ public class SysSentinelClientController {
         Request request = new Request.Builder().url(urlAndPort + sysEndPoint +"updateAuth").header("JwtToken","null").header("RegisterToken",getAuthToken()).header("sysUUID",getUUID()).get().build();
         Response responseBody = client.newCall(request).execute();
         String rsp = responseBody.body().string();
-        System.out.println(rsp);
         generateJwtFile(getTokenfromString(rsp));
+        responseBody.body().close();
     }
     private static void sendDtoNoAuth(String urlAndPort, SystemDTO sysDTO, OkHttpClient client) throws IOException {
         boolean condUUIDNull = true;
@@ -57,6 +57,7 @@ public class SysSentinelClientController {
                 else {
                     System.out.println("[" + new Date() + "]" + " Falha ao enviar a requisição para: " + urlAndPort + sysEndPoint + "sysinfo, " + "Código: " + responseBody.code() + " | Tentando novamente em 10 segundos...");
                 }
+                responseBody.body().close();
             }
             catch (Exception e) {
                 System.out.println("[" + new Date() + "] " + e + " | Tentando novamente em 10 segundos...");
@@ -83,13 +84,14 @@ public class SysSentinelClientController {
                     notSentCond = false;
                 }
                 else if (responseBody.code() == 401){
-                    System.out.println("[" + new Date() + "]" + " Falha na autenticação...\n "+ "[" + new Date() + "]"+" Requisitando nova credencial ao servidor...");
+                    System.out.println("[" + new Date() + "]" + " Falha na autenticação...\n"+ "[" + new Date() + "]"+" Requisitando nova credencial ao servidor...");
                     requestNewJWTToken(urlAndPort,client);
                     System.out.println("[" + new Date() + "]" + " Tentando reenvio da \"Requisição de saudação\" em 10 segundos...");
                 }
                 else {
                     System.out.println("[" + new Date() + "]" + " Falha ao enviar a requisição para: " + urlAndPort + sysEndPoint + "sysinfo, " + "Código: " + responseBody.code() + " | Tentando novamente em 10 segundos...");
                 }
+                responseBody.body().close();
             }
             catch (Exception e) {
                 System.out.println("[" + new Date() + "] " + e + " | Tentando novamente em 10 segundos...");
@@ -126,6 +128,7 @@ public class SysSentinelClientController {
             else {
                 System.out.println("[" + new Date() + "]" + " Falha ao enviar a requisição para: " + urlAndPort + sysEndPoint + "sysinfovolatile, " + "Código: " + responseBody.code() + " | Tentando novamente em 10 segundos...");
             }
+            responseBody.body().close();
         }
         catch(Exception e){
             System.out.println("[" + new Date() +"] " + e + " | Tentando novamente em 10 segundos..");
