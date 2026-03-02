@@ -5,19 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.*;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import static java.lang.Thread.sleep;
 
 public class SysSentinelClientService {
 
     static String UUID;
-    public static final MediaType JSON = MediaType.parse("application/json");
     public static String getUUIDfromString(String body) throws JsonProcessingException {
         ObjectMapper om = new ObjectMapper();
         HashMap<String,String> uuid = om.readValue(body, HashMap.class);
@@ -41,10 +38,8 @@ public class SysSentinelClientService {
 
     public static void fileExists(File cache){
         try (Scanner scanner = new Scanner(cache)) {
-            String fileString = scanner.nextLine();
-            String urlAndPort = fileString.substring(fileString.indexOf("=") + 1);
-            String rawUUID = scanner.nextLine();
-            UUID = rawUUID.substring(rawUUID.indexOf("=") + 1);
+            String urlAndPort = getURL();
+            UUID = getUUID();
             System.out.println("[" + new Date() + "] " + "Uma URL ja existe no cache, deseja re-utilizar la? [" + urlAndPort + "] Y/n (Padrão: Y)");
             String anwser;
             Scanner scanner1 = new Scanner(System.in);
@@ -71,7 +66,7 @@ public class SysSentinelClientService {
         cache.createNewFile();
         try (FileWriter fw = new FileWriter(cache)) {
             fw.write("url=" + urlAndPort);
-            fw.write("\nuuid=" + "null");
+            writeUUID("null");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -114,7 +109,17 @@ public class SysSentinelClientService {
             throw new RuntimeException(e);
         }
     }
+    public static String getURL(){
+        File cache = new File("sysSentinel.config");
+        try (Scanner scanner = new Scanner(cache)) {
+            return scanner.nextLine().substring(4);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
+
 
 /*
 

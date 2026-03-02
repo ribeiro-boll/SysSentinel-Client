@@ -9,7 +9,6 @@ import static com.bolota.SysSentinelClient.Service.SysSentinelClientService.*;
 public class Client {
     public static void main(String[] args) throws IOException{
         File cache = new File("sysSentinel.config");
-        String urlAndPort = "";
         if (!cache.createNewFile()) {
             assertAuthToken();
             fileExists(cache);
@@ -17,6 +16,7 @@ public class Client {
             assertAuthToken();
             fileNotExists(cache);
         }
+        String urlAndPort = getURL();
         System.out.println("[" + new Date() + "]" + " UUID deste sistema: " + getUUID());
         runClient(urlAndPort);
     }
