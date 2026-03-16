@@ -12,20 +12,16 @@ Após o provisionamento inicial, o agente opera de forma autônoma.
 * [Tecnologias Utilizadas](#tecnologias-utilizadas)
 * [Execução](#execução)
 * [Arquivos de Configuração (Gerados Automaticamente)](#arquivos-de-configuração-gerados-automaticamente)
-
   * [sysSentinel.config](#syssentinelconfig)
   * [Security/RegisterToken.config](#securityregistertokenconfig)
   * [Security/jwtToken.config](#securityjwttokenconfig)
 * [Dados Coletados](#dados-coletados)
-
   * [Dados Fixos (Inventário)](#dados-fixos-inventário)
   * [Dados Voláteis](#dados-voláteis)
-
     * [Informações básicas](#informações-básicas)
     * [Rede](#rede)
     * [Processos](#processos)
 * [Fluxo de Comunicação com o Servidor](#fluxo-de-comunicação-com-o-servidor)
-
   * [1. Provisionamento Inicial](#1-provisionamento-inicial)
   * [2. Atualização de Inventário](#2-atualização-de-inventário)
   * [3. Renovação de Token](#3-renovação-de-token)
